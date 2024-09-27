@@ -1,0 +1,102 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#formhead{
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* Main Container */
+#main {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #edf2ed;
+    border-color: #333;
+    border: 2px solid;
+    border-radius: 2%;
+}
+
+/* Canvas Container */
+#canvas {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Body */
+#form-body {
+    width: 100%;
+}
+
+/* Form Elements */
+form label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+form input[type="email"],
+form input[type="password"],
+form input[type="text"],
+form input[type="number"],
+form input[type="file"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #0378fe;
+}
+
+form button[type="submit"] {
+    width: 50%;
+    background-color: #006aec;
+    color: white;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #05e727;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    #main {
+        padding: 10px;
+    }
+
+    #canvas {
+        padding: 20px;
+    }
+}

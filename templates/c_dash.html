@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Welcome to Customer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section: Looking For? -->
+    <div class="container mt-5">
+        <h2>Looking For?</h2>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <a href="/services/ac_repair" class="btn btn-outline-primary w-100 py-3">AC Repair</a>
+            </div>
+            <div class="col-md-3">
+                <a href="/services/saloon" class="btn btn-outline-primary w-100 py-3">Saloon</a>
+            </div>
+            <div class="col-md-3">
+                <a href="/services/cleaning" class="btn btn-outline-primary w-100 py-3">Cleaning</a>
+            </div>
+            <div class="col-md-3">
+                <a href="/services/electrician" class="btn btn-outline-primary w-100 py-3">Electrician</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service History Table -->
+    <div class="container mt-5">
+        <h3>Service History</h3>
+        <table class="table table-hover table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Professional Name</th>
+                    <th>Phone No.</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through services and display -->
+                {% for service in service_history %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.name }}</td>
+                    <td>{{ service.professional_name }}</td>
+                    <td>{{ service.phone }}</td>
+                    <td>
+                        {% if service.status == 'closed' %}
+                        Closed
+                        {% else %}
+                        <a href="/close_service/{{ service.id }}" class="btn btn-sm btn-success">Close it?</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle (Includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
