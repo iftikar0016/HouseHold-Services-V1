@@ -15,14 +15,17 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse" id="navbarNav" >
+                <ul class="navbar-nav ms-auto" style="display: flex; justify-content: center; width: 100%;" >
                     <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
                     <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
                     <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                     <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
                 </ul>
+            </div>
+            <div class="nav-link" style="display: flex;">
+                <a href="/logout">logout</a>
             </div>
         </div>
     </nav>
@@ -31,18 +34,11 @@
     <div class="container mt-5">
         <h2>Looking For?</h2>
         <div class="row g-3">
+            {% for service in services %}
             <div class="col-md-3">
-                <a href="/services/ac_repair" class="btn btn-outline-primary w-100 py-3">AC Repair</a>
+                <a href="/service/{{service.id}}/{{user.id}}" class="btn btn-outline-primary w-100 py-3">{{service.name}}</a>
             </div>
-            <div class="col-md-3">
-                <a href="/services/saloon" class="btn btn-outline-primary w-100 py-3">Saloon</a>
-            </div>
-            <div class="col-md-3">
-                <a href="/services/cleaning" class="btn btn-outline-primary w-100 py-3">Cleaning</a>
-            </div>
-            <div class="col-md-3">
-                <a href="/services/electrician" class="btn btn-outline-primary w-100 py-3">Electrician</a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -61,12 +57,12 @@
             </thead>
             <tbody>
                 <!-- Loop through services and display -->
-                {% for service in service_history %}
+                {% for service in service_request %}
                 <tr>
                     <td>{{ service.id }}</td>
-                    <td>{{ service.name }}</td>
-                    <td>{{ service.professional_name }}</td>
-                    <td>{{ service.phone }}</td>
+                    <td>{{ service.service_id }}</td>
+                    <td>{{ service.professional_id }}</td>
+                    <td>{{ service.status }}</td>
                     <td>
                         {% if service.status == 'closed' %}
                         Closed

@@ -23,6 +23,7 @@ class Professional(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     email= db.Column(db.String(), nullable=False )
     password= db.Column(db.String(), nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
     role=db.Column(db.String(30), nullable=False, default="professional")
     fullname= db.Column(db.String(80))
     address= db.Column(db.String(200))
@@ -34,7 +35,14 @@ class Service(db.Model):
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(250))
-    time_required = db.Column(db.Integer)
+    time_required = db.Column(db.Integer, default='2 Days')
 
 
 db.create_all()
+
+admin=User.query.filter_by(email='admin@email').first()
+if not admin:
+    adm=User(email='admin@email', password='111', role= "admin")
+    db.session.add(adm)
+    db.session.commit()
+

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/common.css">    
+</head>
+<body>
+    <h1>Best {{service.name}} professionals</h1>
+    <h3>
+        {% for prof in professionals %}
+        
+        <div class="card" style="width: 18rem;">
+            <img src="https://imgs.search.brave.com/0jjDdElNJ3_cbtITXmwh__8IfbLWY2JPa6-w2sEL6tA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by91/c2VyLWZyb250LXNp/ZGUtd2l0aC13aGl0/ZS1iYWNrZ3JvdW5k/XzE4NzI5OS00MDAw/Ny5qcGc_c2VtdD1h/aXNfaHlicmlk" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h1 class="card-title">{{prof.fullname}}</h1>
+              <h5 class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</h5>
+              <a href="/service_request/{{user.id}}/{{prof.id}}" class="btn btn-primary">Book</a>
+            </div>
+        </div>
+        {% endfor %}
+    </h3>
+
+    <!-- Bootstrap 5 JavaScript Bundle (Includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>
