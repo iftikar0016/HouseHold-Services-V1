@@ -1,23 +1,31 @@
 from flask import Flask
-from application.database import db
+from application.config import LocalDevelopmentConfig
+from application.models import db, User, Role
+from application.resources import api
+from flask_security import Security, SQLAlchemyUserDatastore, auth_required
 
-app = None
-
-def create_app():
+def createApp():
     app = Flask(__name__)
-    app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///hsdata.sqlite3"
-    db.init_app(app)
-    # api.init_app(app)
 
+    app.config.from_object(LocalDevelopmentConfig)
+
+    db.init_app(app)
+    api.init_app(app)
+
+    datastore = SQLAlchemyUserDatastore(db, User, Role)
+
+    app.security = Security(app, datastore=datastore, register_blueprint=False)
     app.app_context().push()
 
     return app
 
-app=create_app()
+app = createApp()
 
-from application.controllers import *
+import application.initial_data
 
-if __name__=="__main__":
-    app.run()
-    
+import application.controllers
+
+
+        
+if (__name__ == '__main__'):
+    app.run(debug=True)

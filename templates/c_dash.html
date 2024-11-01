@@ -33,10 +33,11 @@
     <!-- Main Section: Looking For? -->
     <div class="container mt-5">
         <h2>Looking For?</h2>
+        <p>{{user}}</p>
         <div class="row g-3">
             {% for service in services %}
             <div class="col-md-3">
-                <a href="/service/{{service.id}}/{{user.id}}" class="btn btn-outline-primary w-100 py-3">{{service.name}}</a>
+                <a href="/service/{{service.id}}/{{user.user_id}}" class="btn btn-outline-primary w-100 py-3">{{service.name}}</a>
             </div>
             {% endfor %}
         </div>
