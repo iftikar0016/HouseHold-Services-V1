@@ -83,11 +83,11 @@
     Add New Service
     <div class="form-container">
         <h2>Service Remarks</h2>
-        <form action="/service_remarks/{{request_id}}" method="post">
+        <form action="/service_remarks/{{service_req.id}}" method="post">
             <div style="display: flex; justify-content:space-around; padding-bottom: 20px;">
-                <button type="button" class="button-85">hello</button>                
-                <button type="button" class="button-85">hello</button>                
-                <button type="button" class="button-85">hello</button>                
+                <button type="button" class="button-85">{{service_req.id}}</button>                
+                <button type="button" class="button-85">{{service_req.customer_id}}</button>                
+                <button type="button" class="button-85">{{service_req.professional_id}}</button>                
                 <button type="button" class="button-85">hello</button>                          
             </div>
           

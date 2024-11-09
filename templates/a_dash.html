@@ -103,6 +103,14 @@
             <!-- Professionals Tab -->
             <div class="tab-pane fade" id="professionals" role="tabpanel" aria-labelledby="professionals-tab">
                 <h3>Manage Professionals</h3>
+                <!-- search box -->
+                  <form action="/search_professional">
+                    <div class="input-group mb-3" style="padding-left: 300px; padding-right: 200px; padding-top: 30px;">
+                        <input name="result" type="text" class="form-control" placeholder="Search Professional" aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                    </div>
+                  </form>
+
                 <!-- Add table or functionality to manage professionals here -->
                 <div class="tableMain" >
                     <table class="table">
@@ -110,7 +118,7 @@
                           <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Service Name</th>
+                            <th scope="col">Service ID</th>
                             <th scope="col">Pin Code</th>
                             <th scope="col">Action</th>
                           </tr>
@@ -120,6 +128,7 @@
                           <tr>
                             <th scope="row">{{loop.index}}</th>
                             <td>{{prof.fullname}}</td>
+                            <td>{{prof.service_id}}</td>
 
                             <td> {{prof.pincode}}</td>
                             
@@ -143,8 +152,9 @@
                           <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Service Name</th>
-                            <th scope="col">Professional Name</th>
-                            <th scope="col">Pin Code</th>
+                            <th scope="col">Customer ID</th>
+                            <th scope="col">Professional ID</th>
+                            <th scope="col">Date of Request</th>
                             <th scope="col">Status</th>
                           </tr>
                         </thead>
@@ -152,13 +162,13 @@
                         {% for req in service_request %} 
                           <tr>
                             <th scope="row">{{loop.index}}</th>
-                            <td>{{req.service_id}}</td>
+                            <td>{{req.service_name}}</td>
                             <td>{{req.customer_id}}</td>
-                            <td>₹ {{req.professional_id}}</td>
+                            <td> {{req.professional_id}}</td>
+                            <td>{{req.date_of_request}}</td>
                             
-                            <td><a href="">
-                                <button class="button-30" role="button">Edit</button>
-                                </a></td>
+                            <td style="font-style: italic;"> {{req.status}}
+                              </td>
                           </tr>
                         {% endfor %}
                         </tbody>

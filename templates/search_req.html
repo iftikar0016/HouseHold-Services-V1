@@ -9,15 +9,15 @@
 <body>
 
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Welcome {{user.fullname}}</a>
+            <a class="navbar-brand" href="#">Search Result</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav" >
                 <ul class="navbar-nav ms-auto" style="display: flex; justify-content: center; width: 100%; padding-right: 15%;" >
-                    <li class="nav-item"><a class="nav-link" href="/user/{{user.user_id}}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/{{user_id}}">Home</a></li>
                     <!-- <li class="nav-item"><a class="nav-link" href="/search">Search</a></li> -->
                     <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
                     <!-- <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li> -->
@@ -31,35 +31,13 @@
         </div>
     </nav>
 
-    <!-- Main Section: Looking For? -->
-    <div class="container mt-5">
-        
-        <div>
-            <form action="/search_service/{{user.user_id}}" style="display: flex; justify-content: center;">
-                <div class="input-group mb-3" >
-                    <input style="max-width:20%; " name="result" type="text" class="form-control" placeholder="Search Service" aria-label="Recipient's username" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-                </div>
-             </form>
-        </div>
-        <h2 style="padding-bottom: 5px;">Looking For?</h2>
-        <div class="row g-3">
-            {% for service in services %}
-            <div class="col-md-3">
-                <a href="/service/{{service.id}}/{{user.user_id}}" class="btn btn-outline-primary w-100 py-3">{{service.name}}</a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- search box for search req -->
-     <form action="/search_req/{{user.user_id}}">
+    <!-- search box -->
+    <form action="/search_req/{{user_id}}">
         <div class="input-group mb-3" style="padding-left: 300px; padding-right: 200px; padding-top: 30px;">
             <input name="result" type="text" class="form-control" placeholder="Search Requests" aria-label="Recipient's username" aria-describedby="button-addon2">
             <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
         </div>
      </form>
-    
 
     <!-- Service History Table -->
     <div class="container mt-5">
@@ -85,10 +63,6 @@
                     <td>
                         {% if service.status == 'closed' %}
                         Closed
-                        {% elif service.status == 'rejected' %}
-                        Rejected
-                        {% elif service.status == 'requested' %}
-                         Requested    
                         {% else %}
                         <a href="/service_remarks/{{ service.id }}" class="btn btn-sm btn-success">Close it?</a>
                         {% endif %}

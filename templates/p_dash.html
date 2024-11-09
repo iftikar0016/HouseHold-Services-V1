@@ -33,64 +33,72 @@
   <main style="margin: 30px;">
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="padding: 20px;">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"> Requested Services </button>
+        <button class="nav-link active" id="Requested-services-tab" data-bs-toggle="pill" data-bs-target="#Requested-services" type="button" role="tab" aria-controls="Requested-services" aria-selected="true"> Requested Services </button>
       </li>
       <li class="nav-item" role="presentation" style="margin-left: 10px;">
-        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"> Closed Services </button>
+        <button class="nav-link" id="closed-services-tab" data-bs-toggle="pill" data-bs-target="#closed-services" type="button" role="tab" aria-controls="closed-services" aria-selected="false"> Closed Services </button>
       </li>
     </ul>
     
     <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-        <div class="tableMain" >
-          <table class="table">
-              <thead>
+      <div class="tab-pane fade show active" id="Requested-services" role="tabpanel" aria-labelledby="Requested-services-tab" tabindex="0">
+        <div class="container mt-5" >
+          <table class="table table-hover table-bordered">
+              <thead class="table-light">
                 <tr>
                   <th scope="col">ID</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Base Price</th>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Date of Request</th>
+
                   <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
-              {% for service in services %} 
+              {% for service in service_request %} 
                 <tr>
                   <th scope="row">{{loop.index}}</th>
-                  <td>{{service.name}}</td>
-                  <td>{{service.description}}</td>
-                  <td>{{service.price}}</td>
-                  <td><button class="button-30" role="button">Edit</button></td>
+                  <td>{{service.customer_id}}</td>
+                  <td>{{service.date_of_request}}</td>
+
+                  <td>{% if service.status == 'requested' %}
+                    <a href="/accept_req/{{ service.id }}" class="btn btn-sm btn-success">Accept it?</a>
+                    {% elif service.status == 'closed' %}
+                    closed
+                    {% elif service.status == 'accepted' %}
+                    Accepted
+                    {% else %}
+                    Rejected
+                    {% endif %}</td>
                 </tr>
               {% endfor %}
               </tbody>
             </table>
        </div>
       </div>
-      <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+      <div class="tab-pane fade" id="closed-services" role="tabpanel" aria-labelledby="closed-services-tab" tabindex="0">
         <div class="tableMain" >
           <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Base Price</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody class="table-group-divider">
-              {% for service in services %} 
-                <tr>
-                  <th scope="row">{{loop.index}}</th>
-                  <td>{{service.name}}</td>
-                  <td>{{service.description}}</td>
-                  <td>{{service.price}}</td>
-                  <td><button class="button-30" role="button">Edit</button></td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Date of Request</th>
+
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            {% for service in service_request %} 
+              <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{service.customer_id}}</td>
+                <td>{{service.date_of_request}}</td>
+
+                <td><button class="button-30" role="button">Edit</button></td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
        </div>
       </div>
     </div>

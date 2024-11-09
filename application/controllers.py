@@ -1,13 +1,14 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, abort
 from flask import current_app as app
-from flask_security import auth_required, verify_password, hash_password, roles_required
+from flask_security import auth_required, verify_password, hash_password, roles_required, current_user
 from datetime import datetime
 from .models import Customer, db, Professional, Service, ServiceRequest
 
 datastore = app.security.datastore
 
-# @app.route('/')
-# def test():
+@app.route('/')
+def test():
+     return redirect('/admin')
 #     return render_template('ServiceRequest.html')
 
 
@@ -106,7 +107,8 @@ def customer(id):
 def professional(id):
    user=Professional.query.filter_by(user_id=id).first()
    services=ServiceRequest.query.filter_by(professional_id=id)
-   return render_template('p_dash.html',user=user, services=services)
+   service_request=ServiceRequest.query.filter_by(professional_id=id)
+   return render_template('p_dash.html',user=user, services=services, service_request=service_request)
 
 
 @app.route('/add_service', methods=['GET','POST'])
@@ -143,7 +145,7 @@ def editService(id):
 def service(id, user_id):
     service=Service.query.filter_by(id=id).first()
     professionals=Professional.query.filter_by(service_id=id).all()
-    user=Customer.query.get(user_id)
+    user=Customer.query.filter_by(user_id=user_id).first()
     return render_template('service.html', service=service, professionals=professionals, user=user)
 
 
@@ -151,38 +153,91 @@ def service(id, user_id):
 @app.route('/service_request/<int:user_id>/<int:professional_id>', methods=['GET'])
 def service_request(user_id, professional_id):
     # ServiceRequest=ServiceRequest.query.filter_by(id=id).first()
-    professional=Professional.query.get(professional_id)
-    user=User.query.get(user_id)
-    new_service_request = ServiceRequest( service_id=professional.service_id, customer_id=user.id, professional_id=professional.id )
+    professional=Professional.query.filter_by(user_id=professional_id).first()
+    service=Service.query.get(professional.service_id)
+    user=Customer.query.filter_by(user_id=user_id).first()
+    new_service_request = ServiceRequest(service_name=service.name, customer_name=user.fullname, professional_name=professional.fullname ,service_id=professional.service_id, customer_id=user.user_id, professional_id=professional.user_id,date_of_request=datetime.now() )
     db.session.add(new_service_request)
     db.session.commit()
-    return redirect(url_for('user', id=user_id))
+    return redirect(url_for('customer', id=user_id))
 
 
+def raw(text): # text = ServiceRequest One
+    split_list = text.split() #----> list ['ServiceRequest', 'One']
+    src_word = ''
+    for word in split_list:
+        src_word += word.lower()
+    return src_word
 
+@app.route('/search_req/<id>')
+def req_search(id):
+    srch_word = request.args.get('result')
+    srch_word = "%"+srch_word.title()+"%"
+    srch_prof = "%"+srch_word.title()+"%"
+    r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word)).all()
+    r_prof_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.professional_name.like(srch_prof)).all()
+    search_results = r_service_name + r_prof_name
+    return render_template('search_req.html', service_request=search_results, user_id=id)
 
+@app.route('/search_service/<id>')
+def service_search(id):
+    srch_word = request.args.get('result')
+    srch_word = "%"+srch_word.title()+"%"
+    # srch_prof = "%"+srch_word.title()+"%"
+    r_service_name = Service.query.filter(Service.name.like(srch_word)).all()
+    # r_prof_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.professional_name.like(srch_prof)).all()
+    search_results = r_service_name 
+    return render_template('search_service.html', services=search_results, user_id=id)
 
+@app.route('/search_professional')
+def prof_search():
+    srch_word = request.args.get('result')
+    srch_word = "%"+srch_word.title()+"%"
+    srch_prof = "%"+srch_word.title()+"%"
+    r_prof_name = Professional.query.filter(Professional.fullname.like(srch_prof)).all()
+    search_results = r_prof_name
+    return render_template('search_professionals.html', professionals=search_results)
+
+@app.route('/accept_req/<id>')
+def accept_req(id):
+    req= ServiceRequest.query.get(id)
+    param = request.args.get('param')
+    if param == 'Accept':
+        req.status = "accepted"
+        db.session.commit()
+        return redirect(url_for('professional', id=req.professional_id))
+    if param == 'Reject':
+        req.status = "rejected"
+        db.session.commit()
+        return redirect(url_for('professional', id=req.professional_id))
+
+    return render_template('accept_req.html', req_id=id)
 
 @app.route('/service_remarks/<int:request_id>', methods=['GET', 'POST'])
 def service_remarks(request_id):
+    req= ServiceRequest.query.get(request_id)
     if request.method == 'POST':
-        rating_value = request.form.get('rating')
-        remarks = request.form.get('remarks')
+        # rating_value = request.form.get('rating')
+        # remarks = request.form.get('remarks')
         
-        # Assuming you have `Professional` and `ServiceRequest` models
-        professional_id = request.form.get('professional_id')  # ID passed as hidden input
+        # # Assuming you have `Professional` and `ServiceRequest` models
+        # professional_id = request.form.get('professional_id')  # ID passed as hidden input
         
-        # Save the rating and remarks in the Rating model
-        rating = Rating(rating=float(rating_value), professional_id=professional_id)
-        db.session.add(rating)
+        # # Save the rating and remarks in the Rating model
+        # rating = Rating(rating=float(rating_value), professional_id=professional_id)
+        # db.session.add(rating)
         
-        # Update average rating for professional
-        professional = Professional.query.get(professional_id)
-        ratings = [r.rating for r in professional.ratings]
-        professional.average_rating = sum(ratings) / len(ratings) if ratings else rating_value
+        # # Update average rating for professional
+        # professional = Professional.query.get(professional_id)
+        # ratings = [r.rating for r in professional.ratings]
+        # professional.average_rating = sum(ratings) / len(ratings) if ratings else rating_value
+        # db.session.commit()
+
+
+        req.status = "closed"
         db.session.commit()
-        
-        return redirect(url_for('home'))  # Redirect to home or any other page
+        return redirect(url_for('customer', id=req.customer_id))  # Redirect to home or any other page
 
     # Render the template with pre-filled data for GET request
-    return render_template('service_remarks.html', request_id=request_id)
+    
+    return render_template('service_remarks.html', service_req= req)
