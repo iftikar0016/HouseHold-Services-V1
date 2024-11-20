@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Service</title>
+    <link rel="stylesheet" href="/static/common.css">
+    <style>
+        * {
+          box-sizing: border-box;
+          font-family: Arial, sans-serif;
+        }
+    
+        .form-container {
+          width: 400px;
+          padding: 20px;
+          margin: 50px auto;
+          border: 2px solid #ccc;
+          border-radius: 10px;
+          text-align: center;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        h2 {
+          color: #000000;
+          margin-bottom: 20px;
+        }
+    
+        .form-group {
+          margin-bottom: 15px;
+          text-align: left;
+        }
+    
+        label {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+    
+        input[type="text"] {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+    
+        textarea {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          resize: vertical;
+        }
+    
+        .button-group {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+    
+        .button {
+          width: 48%;
+          padding: 10px;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+    
+        .add-button {
+          background-color: #2980b9;
+        }
+    
+        .cancel-button {
+          background-color: #bdc3c7;
+        }
+      </style>
+</head>
+<body>
+    {% if user.roles[0].name=="professional" %}
+    <div class="form-container">
+        
+          <div> 
+            {% if not user.active %}
+            <form action="/user_action/{{user.id}}">
+                <input type="hidden" name="param" value="Approve">
+                <button type="submit" class="button-50" style="font-size: large;">Approve</button>
+            </form>
+            {% elif not user.is_blocked %}
+            <h2>Block Professional?</h2>
+            <form action="/user_action/{{user.id}}" style="display: grid; ">
+                {{user.professional.fullname}}
+                <input type="hidden" name="param" value="Block">
+                <button type="submit" class="button-50" style="font-size: large;">Block</button>
+            </form>
+            {% else %}
+            <h2>Unblock Professional?</h2>
+            <form action="/user_action/{{user.id}}">
+                <input type="hidden" name="param" value="Unblock">
+                <button type="submit" class="button-50" style="font-size: large;">Unblock</button>
+            </form>
+            {% endif %}
+          </div>
+      </div>
+
+      {% else %}
+      <div class="form-container">
+        <h2>New Service</h2>
+        <div> 
+            {% if not user.active %}
+            <form action="/user_action/{{user.id}}">
+                <input type="hidden" name="param" value="Approve">
+                <button type="submit" class="button-50" style="font-size: large;">Approve</button>
+            </form>
+            {% elif not user.is_blocked %}
+            <h2>Block Professional?</h2>
+            <form action="/user_action/{{user.id}}" style="display: grid; ">
+                {{user.professional.fullname}}
+                <input type="hidden" name="param" value="Block">
+                <button type="submit" class="button-50" style="font-size: large;">Block</button>
+            </form>
+            {% else %}
+            <h2>Unblock Professional?</h2>
+            <form action="/user_action/{{user.id}}">
+                <input type="hidden" name="param" value="Unblock">
+                <button type="submit" class="button-50" style="font-size: large;">Unblock</button>
+            </form>
+            {% endif %}
+          </div>
+      </div>
+      {% endif %}
+</body>
+</html>

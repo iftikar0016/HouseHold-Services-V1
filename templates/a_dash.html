@@ -131,8 +131,24 @@
                             <td>{{prof.service_id}}</td>
 
                             <td> {{prof.pincode}}</td>
-                            
-
+                            <td>
+                              {% if not prof.user.active %}
+                              <a href="user_action/{{prof.user_id}}">
+                                <button>Review</button>
+                              </a>
+                                  
+                              {% elif not prof.user.is_blocked %}
+                              <a href="user_action/{{prof.user_id}}">
+                                <button>Block</button>
+                              </a>
+                                  
+                              {% else %}
+                              <a href="user_action/{{prof.user_id}}">
+                                <button>Unblock</button>
+                              </a>
+                                  
+                              {% endif %}
+                            </td>
                           </tr>
                         {% endfor %}
                         </tbody>

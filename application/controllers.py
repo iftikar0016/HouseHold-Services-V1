@@ -1,19 +1,20 @@
 from flask import Flask, render_template, redirect, request, url_for, abort
 from flask import current_app as app
-from flask_security import auth_required, verify_password, hash_password, roles_required, current_user
+from flask_security import auth_required, login_required, verify_password, hash_password, roles_required, current_user
 from datetime import datetime
-from .models import Customer, db, Professional, Service, ServiceRequest
+from .models import Customer, db, Professional, Service, ServiceRequest, User
 
 datastore = app.security.datastore
+# login_url = url_for('login')
 
-@app.route('/')
-def test():
-     return redirect('/admin')
+@app.route('/logout')
+def logout():
+     return redirect(url_for('login'))
 #     return render_template('ServiceRequest.html')
 
 
 @app.route('/userlogin', methods=['GET','POST'])
-def user_login():
+def login():
     if request.method=='POST':
         email = request.form.get("email")
         password = request.form.get("password")
@@ -73,7 +74,7 @@ def professional_reg():
         if user:
             return "user already exists with this email!"
         else:
-            user = datastore.create_user(email=email, password=hash_password(pwd))
+            user = datastore.create_user(email=email, password=hash_password(pwd), active= False)
             datastore.add_role_to_user(user, 'professional')  # Add role separately
             db.session.commit()
             new_user = Professional( user_id=user.id, address=address, pincode=pincode, fullname= fullname, service_id=service)
@@ -104,11 +105,14 @@ def customer(id):
 
 
 @app.route('/professional/<int:id>', methods=['GET','POST'])
+@roles_required("professional")
 def professional(id):
-   user=Professional.query.filter_by(user_id=id).first()
-   services=ServiceRequest.query.filter_by(professional_id=id)
-   service_request=ServiceRequest.query.filter_by(professional_id=id)
-   return render_template('p_dash.html',user=user, services=services, service_request=service_request)
+    if not current_user.is_authenticated or not current_user.active:
+        return abort(403)
+    user=Professional.query.filter_by(user_id=id).first()
+    services=ServiceRequest.query.filter_by(professional_id=id)
+    service_request=ServiceRequest.query.filter_by(professional_id=id)
+    return render_template('p_dash.html',user=user, services=services, service_request=service_request)
 
 
 @app.route('/add_service', methods=['GET','POST'])
@@ -212,6 +216,24 @@ def accept_req(id):
         return redirect(url_for('professional', id=req.professional_id))
 
     return render_template('accept_req.html', req_id=id)
+
+@app.route('/user_action/<int:id>')
+def user_action(id):
+    user=User.query.get(id)
+    param = request.args.get('param')
+    if param == 'Approve':
+        user.active = True
+        db.session.commit()
+        return redirect(url_for('admin'))
+    if param == 'Block':
+        user.is_blocked = True
+        db.session.commit()
+        return redirect(url_for('admin'))
+    if param == 'Unblock':
+        user.is_blocked = False
+        db.session.commit()
+        return redirect(url_for('admin'))
+    return render_template('user_action.html', user=user)
 
 @app.route('/service_remarks/<int:request_id>', methods=['GET', 'POST'])
 def service_remarks(request_id):

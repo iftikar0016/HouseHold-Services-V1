@@ -20,6 +20,9 @@ class User(db.Model, UserMixin):
     id=db.Column(db.Integer, primary_key=True)
     email= db.Column(db.String(), nullable=False )
     password= db.Column(db.String(), nullable=False)
+    is_blocked= db.Column(db.Boolean, default=False)
+    professional = db.relationship('Professional',uselist=False, back_populates='user')
+    customer = db.relationship('Customer',uselist=False, back_populates='user')
         # flask-security specific
     fs_uniquifier = db.Column(db.String, unique = True, nullable = False)
     active = db.Column(db.Boolean, default = True)
@@ -38,6 +41,7 @@ class UserRoles(db.Model):
 class Customer(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    user = db.relationship('User', back_populates='customer')
     fullname= db.Column(db.String(80))
     address= db.Column(db.String(200))
     pincode=db.Column(db.Integer)
@@ -45,6 +49,7 @@ class Customer(db.Model):
 class Professional(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    user = db.relationship('User', back_populates='professional')
     fullname= db.Column(db.String(80))
     address= db.Column(db.String(200))
     pincode=db.Column(db.Integer)
