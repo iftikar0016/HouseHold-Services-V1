@@ -281,7 +281,7 @@ def profile(id):
             if pincode != '':
                 user.professional.pincode= pincode
             db.session.commit()
-            return redirect(f'/user/{user.id}')
+            return redirect(f'/professional/{user.id}')
 
         if user.roles[0].name == "customer":
             pincode = request.form.get('pincode')
@@ -291,3 +291,35 @@ def profile(id):
             return redirect(f'/user/{user.id}') 
 
     return render_template('profile.html',user=user)
+
+@app.route("/summary/<int:user_id>")
+def graph(user_id):
+    # Query the database for the given customer_id
+    data = (
+        db.session.query(ServiceRequest.status, db.func.count(ServiceRequest.id))
+        .filter((ServiceRequest.customer_id == user_id) | (ServiceRequest.professional_id == user_id))  # Filter for either customer or professional
+        .group_by(ServiceRequest.status)
+        .all()
+    )
+    
+    # Prepare data for the chart
+    labels = [row[0] for row in data]  # Statuses (e.g., "requested", "completed")
+    values = [row[1] for row in data]  # Count of requests for each status
+
+    return render_template("summary.html", labels=labels, values=values)
+
+
+@app.route("/summary")
+def summery():
+    # Query the database for the given customer_id
+    data = (
+        db.session.query(ServiceRequest.status, db.func.count(ServiceRequest.id))  
+        .group_by(ServiceRequest.status)
+        .all()
+    )
+    
+    # Prepare data for the chart
+    labels = [row[0] for row in data]  # Statuses (e.g., "requested", "completed")
+    values = [row[1] for row in data]  # Count of requests for each status
+
+    return render_template("summary.html", labels=labels, values=values)

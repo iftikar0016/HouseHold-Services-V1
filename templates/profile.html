@@ -119,10 +119,12 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password" placeholder="*****">
       </div>
+      {% if user.roles[0].name=="customer" %}
       <div class="mb-3">
         <label for="pincode" class="form-label">Pincode</label>
-        <input type="pincode" class="form-control" id="pincode" name="pincode" placeholder="">
+        <input type="pincode" class="form-control" id="pincode" name="pincode" placeholder="{{user.customer.pincode}}">
       </div>
+      {% endif %}
       <button type="submit" class="btn">Save Changes</button>
     </form>
   </div>
