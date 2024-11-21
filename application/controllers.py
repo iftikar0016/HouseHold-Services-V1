@@ -263,3 +263,31 @@ def service_remarks(request_id):
     # Render the template with pre-filled data for GET request
     
     return render_template('service_remarks.html', service_req= req)
+
+@app.route('/profile/<int:id>', methods=['GET','POST'])
+def profile(id):
+    user=User.query.get(id)
+    if request.method=="POST":
+        email= request.form.get('email')
+        password = request.form.get('password')
+        
+        if email !='':
+            user.email= email
+        if password != '':
+            user.password= password
+
+        if user.roles[0].name == "professional":
+            pincode = request.form.get('pincode')
+            if pincode != '':
+                user.professional.pincode= pincode
+            db.session.commit()
+            return redirect(f'/user/{user.id}')
+
+        if user.roles[0].name == "customer":
+            pincode = request.form.get('pincode')
+            if pincode != '':
+                user.customer.pincode= pincode
+            db.session.commit()
+            return redirect(f'/user/{user.id}') 
+
+    return render_template('profile.html',user=user)
