@@ -9,9 +9,9 @@
 </head>
 <body class="container mt-5">
     {% if professionals|length == 0 %}
-    <h1>No Professional in you Location</h1>
+    <h1>Sorry, No Professional in available your Location</h1>
     {% else %}
-    <h1>Best {{service.name}} professionals</h1>
+    <h1>Best {{service.name}} professionals in your location</h1>
     <h3 style="padding-top: 5px;">
         {% for prof in professionals %}
         

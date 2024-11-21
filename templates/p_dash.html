@@ -42,22 +42,22 @@
     
     <div class="tab-content" id="pills-tabContent">
       <div class="tab-pane fade show active" id="Requested-services" role="tabpanel" aria-labelledby="Requested-services-tab" tabindex="0">
-        <div class="container mt-5" >
-          <table class="table table-hover table-bordered">
-              <thead class="table-light">
+        <div class="tableMain" >
+          <table class="table">
+              <thead>
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Customer Name</th>
                   <th scope="col">Date of Request</th>
 
-                  <th scope="col">Action</th>
+                  <th scope="col">Status</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
               {% for service in service_request %} 
                 <tr>
                   <th scope="row">{{loop.index}}</th>
-                  <td>{{service.customer_id}}</td>
+                  <td>{{service.customer_name}}</td>
                   <td>{{service.date_of_request}}</td>
 
                   <td>{% if service.status == 'requested' %}
@@ -83,18 +83,20 @@
                 <th scope="col">ID</th>
                 <th scope="col">Customer Name</th>
                 <th scope="col">Date of Request</th>
+                <th scope="col">Date of Completion</th>
 
-                <th scope="col">Action</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody class="table-group-divider">
             {% for service in service_request %} 
               <tr>
                 <th scope="row">{{loop.index}}</th>
-                <td>{{service.customer_id}}</td>
+                <td>{{service.customer_name}}</td>
                 <td>{{service.date_of_request}}</td>
+                <td>{{service.date_of_completion}}</td>
 
-                <td><button class="button-30" role="button">Edit</button></td>
+                <td>closed</td>
               </tr>
             {% endfor %}
             </tbody>

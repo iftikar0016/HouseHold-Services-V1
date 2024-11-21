@@ -1,0 +1,152 @@
+.input-group .form-control:focus {
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.8);
+  }
+  /* .input-group {
+  
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+  } */
+  
+  .input-group .form-control {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+  .input-group .btn {
+    border: none;
+    background-color: #0066cc;
+    color: white;
+    padding: 12px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .input-group .btn:hover {
+    background-color: #005bb5;
+  }
+  
+  .input-group .btn:focus {
+    outline: none;
+  }
+
+  
+  /* table.css */
+
+.tableMain {
+    width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Roboto', sans-serif;
+    text-align: left;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table thead {
+    background-color: #012a52;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  
+  .table thead th {
+    padding: 12px;
+    font-weight: 500;
+  }
+  
+  .table tbody tr {
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s ease;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f1f7ff;
+  }
+  
+  .table tbody td,
+  .table tbody th {
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .table tbody td {
+    vertical-align: middle;
+  }
+  
+  .table tbody .button-30 {
+    display: inline-block;
+    background-color: #002245;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .table tbody .button-30:hover {
+    background-color: #005bb5;
+    box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
+  }
+  
+  .table tbody .button-30:focus {
+    outline: none;
+  }
+
+
+
+
+/* CSS */
+.button-92 {
+  --c: #fff;
+  /* text color */
+  background: linear-gradient(90deg, #0000 33%, #fff5, #0000 67%) var(--_p,100%)/300% no-repeat,
+    #520303;
+  /* background color */
+  color: #0000;
+  border: none;
+  transform: perspective(500px) rotateY(calc(20deg*var(--_i,-1)));
+  text-shadow: calc(var(--_i,-1)* 0.08em) -.01em 0   var(--c),
+    calc(var(--_i,-1)*-0.08em)  .01em 2px #0004;
+  outline-offset: .1em;
+  transition: 0.3s;
+}
+
+.button-92:hover,
+.button-92:focus-visible {
+  --_p: 0%;
+  --_i: 1;
+}
+
+.button-92:active {
+  text-shadow: none;
+  color: var(--c);
+  box-shadow: inset 0 0 9e9q #0005;
+  transition: 0s;
+}
+
+.button-92 {
+  font-weight: bold;
+  font-size: 2rem;
+  margin: 0;
+  cursor: pointer;
+  padding: .1em .3em;
+}

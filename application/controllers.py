@@ -256,6 +256,7 @@ def service_remarks(request_id):
 
 
         req.status = "closed"
+        req.date_of_completion = datetime.now()
         db.session.commit()
         return redirect(url_for('customer', id=req.customer_id))  # Redirect to home or any other page
 
