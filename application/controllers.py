@@ -5,7 +5,6 @@ from datetime import datetime
 from .models import Customer, db, Professional, Service, ServiceRequest, User
 
 datastore = app.security.datastore
-# login_url = url_for('login')
 
 @app.route('/logout')
 def logout():
@@ -105,12 +104,12 @@ def customer(id):
 
 
 @app.route('/professional/<int:id>', methods=['GET','POST'])
-@roles_required("professional")
+# @roles_required("professional")
 def professional(id):
-    if not current_user.is_authenticated or not current_user.active:
-        return abort(403)
     user=Professional.query.filter_by(user_id=id).first()
     services=ServiceRequest.query.filter_by(professional_id=id)
+    if user.user.is_blocked or not user.user.active:
+        return abort(403)
     service_request=ServiceRequest.query.filter_by(professional_id=id)
     return render_template('p_dash.html',user=user, services=services, service_request=service_request)
 
