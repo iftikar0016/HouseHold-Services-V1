@@ -28,15 +28,16 @@
             </div>
             
             <div class="nav-link" style="display: flex;">
-                <a href="/logout">logout</a>
+                <a href="/logout"> <button class="button-4">logout</button></a>
             </div>
         </div>
     </nav>
-    <h1>Search Result</h1>
+    <h1 style="margin: 20px;">Search Result</h1>
     <div class="row g-3">
         {% for service in services %}
-        <div class="col-md-3">
-            <a href="/service/{{service.id}}/{{user_id}}" class="btn btn-outline-primary w-100 py-3">{{service.name}}</a>
+        <div class="col-md-2">
+            <a href="/service/{{service.id}}/{{user_id}}" >
+                <button class="button-92" role="button">{{service.name}} </button></a>
         </div>
         {% endfor %}
     </div>

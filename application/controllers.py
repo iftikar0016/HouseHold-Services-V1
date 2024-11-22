@@ -66,7 +66,6 @@ def customer_reg():
 
 
 @app.route('/prof_register', methods=['GET','POST'])
-@roles_required("professional")
 def professional_reg():
     service=Service.query.all()
     if request.method == 'POST':
