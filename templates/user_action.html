@@ -84,18 +84,29 @@
           <div> 
             {% if not user.active %}
             <form action="/user_action/{{user.id}}">
+              <div>
+                <h4>Name: {{user.professional.fullname}}</h4>
+                <h4>Email: {{user.email}}</h4>
+              </div>
                 <input type="hidden" name="param" value="Approve">
                 <button type="submit" class="button-50" style="font-size: large;">Approve</button>
             </form>
             {% elif not user.is_blocked %}
             <h2>Block Professional?</h2>
             <form action="/user_action/{{user.id}}" style="display: grid; ">
-                {{user.professional.fullname}}
+                <div>
+                  <h4>Name: {{user.professional.fullname}}</h4>
+                  <h4>Email: {{user.email}}</h4>
+                </div>
                 <input type="hidden" name="param" value="Block">
                 <button type="submit" class="button-50" style="font-size: large;">Block</button>
             </form>
             {% else %}
             <h2>Unblock Professional?</h2>
+              <div>
+                <h4>Name: {{user.professional.fullname}}</h4>
+                <h4>Email: {{user.email}}</h4>
+              </div>
             <form action="/user_action/{{user.id}}">
                 <input type="hidden" name="param" value="Unblock">
                 <button type="submit" class="button-50" style="font-size: large;">Unblock</button>
@@ -109,19 +120,30 @@
         <div> 
             {% if not user.active %}
             <form action="/user_action/{{user.id}}">
+              <div>
+                <h4>Name: {{user.customer.fullname}}</h4>
+                <h4>Email: {{user.email}}</h4>
+              </div>
                 <input type="hidden" name="param" value="Approve">
                 <button type="submit" class="button-50" style="font-size: large;">Approve</button>
             </form>
             {% elif not user.is_blocked %}
             <h2>Block Customer?</h2>
             <form action="/user_action/{{user.id}}" style="display: grid; ">
-                {{user.professional.fullname}}
+              <div>
+                <h4>Name: {{user.customer.fullname}}</h4>
+                <h4>Email: {{user.email}}</h4>
+              </div>
                 <input type="hidden" name="param" value="Block">
                 <button type="submit" class="button-50" style="font-size: large;">Block</button>
             </form>
             {% else %}
             <h2>Unblock Customer?</h2>
             <form action="/user_action/{{user.id}}">
+              <div>
+                <h4>Name: {{user.customer.fullname}}</h4>
+                <h4>Email: {{user.email}}</h4>
+              </div>
                 <input type="hidden" name="param" value="Unblock">
                 <button type="submit" class="button-50" style="font-size: large;">Unblock</button>
             </form>

@@ -1,10 +1,15 @@
 from flask import Flask, render_template, redirect, request, url_for, abort
 from flask import current_app as app
-from flask_security import auth_required, login_required, verify_password, hash_password, roles_required, current_user
+from flask_security import auth_required, login_required, verify_password, hash_password, roles_required, current_user, login_user
 from datetime import datetime
 from .models import Customer, db, Professional, Service, ServiceRequest, User
 
 datastore = app.security.datastore
+
+@app.route('/')
+def entry():
+     return redirect(url_for('login'))
+
 
 @app.route('/logout')
 def logout():
@@ -21,6 +26,7 @@ def login():
         # this_user = User.query.filter_by(email = email).first() # or .all()
         if user:
             if verify_password(password, user.password):
+                login_user(user)
                 if user.roles[0].name == "admin":
                     return redirect('/admin')
                 elif user.roles[0].name == "professional":
@@ -60,6 +66,7 @@ def customer_reg():
 
 
 @app.route('/prof_register', methods=['GET','POST'])
+@roles_required("professional")
 def professional_reg():
     service=Service.query.all()
     if request.method == 'POST':
@@ -85,17 +92,16 @@ def professional_reg():
 
 
 
-@app.route('/admin', methods=['GET','POST'])
-# @auth_required("token")
-# @roles_required("admin")
+@app.route('/admin', methods=['GET'])
+@roles_required("admin")
 def admin():
-    # admin=User.query.filter_by(role="admin").first()
     professionals = Professional.query.all()
     services = Service.query.all()
     service_request= ServiceRequest.query.all()
     return render_template('a_dash.html', professionals= professionals, services= services, service_request=service_request)
 
 @app.route('/user/<int:id>', methods=['GET','POST'])
+@roles_required("customer")
 def customer(id):
    user=Customer.query.filter_by(user_id=id).first()
    services=Service.query.all()
@@ -104,7 +110,7 @@ def customer(id):
 
 
 @app.route('/professional/<int:id>', methods=['GET','POST'])
-# @roles_required("professional")
+@roles_required("professional")
 def professional(id):
     user=Professional.query.filter_by(user_id=id).first()
     services=ServiceRequest.query.filter_by(professional_id=id)
@@ -115,6 +121,7 @@ def professional(id):
 
 
 @app.route('/add_service', methods=['GET','POST'])
+@roles_required("admin")
 def addService():
     if request.method=="POST":
         ServiceName= request.form.get('service_name')
@@ -127,6 +134,7 @@ def addService():
     return render_template('AddService.html')
 
 @app.route('/editservice/<int:id>', methods=['GET','POST'])
+@roles_required("admin")
 def editService(id):
     service=Service.query.filter_by(id=id).first()
     if request.method=="POST":
@@ -145,6 +153,7 @@ def editService(id):
     return render_template('EditService.html',service=service)
 
 @app.route('/service/<int:id>/<int:user_id>', methods=['GET','POST'])
+@login_required
 def service(id, user_id):
     service=Service.query.filter_by(id=id).first()
     professionals=Professional.query.filter_by(service_id=id).all()
@@ -154,6 +163,7 @@ def service(id, user_id):
 
 
 @app.route('/service_request/<int:user_id>/<int:professional_id>', methods=['GET'])
+@login_required
 def service_request(user_id, professional_id):
     # ServiceRequest=ServiceRequest.query.filter_by(id=id).first()
     professional=Professional.query.filter_by(user_id=professional_id).first()
@@ -173,6 +183,7 @@ def raw(text): # text = ServiceRequest One
     return src_word
 
 @app.route('/search_req/<id>')
+@login_required
 def req_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
@@ -183,6 +194,7 @@ def req_search(id):
     return render_template('search_req.html', service_request=search_results, user_id=id)
 
 @app.route('/search_service/<id>')
+@login_required
 def service_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
@@ -193,6 +205,7 @@ def service_search(id):
     return render_template('search_service.html', services=search_results, user_id=id)
 
 @app.route('/search_professional')
+@login_required
 def prof_search():
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
@@ -201,7 +214,24 @@ def prof_search():
     search_results = r_prof_name
     return render_template('search_professionals.html', professionals=search_results)
 
+@app.route('/search_customer')
+@login_required
+def cus_search():
+    srch_word = request.args.get('result')
+    srch_word = "%"+srch_word.title()+"%"
+    srch_cus = "%"+srch_word.title()+"%"
+    r_cus_name = Customer.query.filter(Customer.fullname.like(srch_cus)).all()
+    search_results = r_cus_name
+    return render_template('all_customers.html', customers=search_results)
+
+@app.route('/all_customers')
+@login_required
+def all_customers():
+    search_results = Customer.query.all()
+    return render_template('all_customers.html', customers=search_results)
+
 @app.route('/accept_req/<id>')
+@login_required
 def accept_req(id):
     req= ServiceRequest.query.get(id)
     param = request.args.get('param')
@@ -217,6 +247,7 @@ def accept_req(id):
     return render_template('accept_req.html', req_id=id)
 
 @app.route('/user_action/<int:id>')
+@roles_required("admin")
 def user_action(id):
     user=User.query.get(id)
     param = request.args.get('param')
@@ -235,6 +266,7 @@ def user_action(id):
     return render_template('user_action.html', user=user)
 
 @app.route('/service_remarks/<int:request_id>', methods=['GET', 'POST'])
+@login_required
 def service_remarks(request_id):
     req= ServiceRequest.query.get(request_id)
     if request.method == 'POST':
@@ -265,6 +297,7 @@ def service_remarks(request_id):
     return render_template('service_remarks.html', service_req= req)
 
 @app.route('/profile/<int:id>', methods=['GET','POST'])
+@login_required
 def profile(id):
     user=User.query.get(id)
     if request.method=="POST":
@@ -293,6 +326,7 @@ def profile(id):
     return render_template('profile.html',user=user)
 
 @app.route("/summary/<int:user_id>")
+@login_required
 def graph(user_id):
     # Query the database for the given customer_id
     data = (
@@ -310,6 +344,7 @@ def graph(user_id):
 
 
 @app.route("/summary")
+@login_required
 def summery():
     # Query the database for the given customer_id
     data = (

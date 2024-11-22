@@ -2,7 +2,7 @@ from flask import Flask
 from application.config import LocalDevelopmentConfig
 from application.models import db, User, Role
 from application.resources import api
-from flask_security import Security, SQLAlchemyUserDatastore, auth_required
+from flask_security import Security, SQLAlchemyUserDatastore
 
 def createApp():
     app = Flask(__name__)

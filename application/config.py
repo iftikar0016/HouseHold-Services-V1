@@ -10,6 +10,7 @@ class LocalDevelopmentConfig(Config):
     SECURITY_PASSWORD_HASH = 'bcrypt'
     SECURITY_PASSWORD_SALT = 'thisshouldbekeptsecret'
     SECRET_KEY = "shouldbekeyveryhidden"
+    SECURITY_LOGIN_URL = "/userlogin"
     SECURITY_TOKEN_AUTHENTICATION_HEADER = 'Authentication-Token'
     
 

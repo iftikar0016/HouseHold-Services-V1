@@ -19,6 +19,7 @@
           <div class="collapse navbar-collapse" id="navbarNav" >
               <ul class="navbar-nav ms-auto" style="display: flex; justify-content: center; width: 100%; padding-right: 15%;" >
                   <li class="nav-item"><a class="nav-link" href="/admin">Home</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/all_customers">Find Customer</a></li>
                   <!-- <li class="nav-item"><a class="nav-link" href="/search">Search</a></li> -->
                   <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
                   <!-- <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li> -->
@@ -144,12 +145,12 @@
                                   
                               {% elif not prof.user.is_blocked %}
                               <a href="user_action/{{prof.user_id}}">
-                                <button>Block</button>
+                                <button class="btn btn-danger">Block</button>
                               </a>
                                   
                               {% else %}
                               <a href="user_action/{{prof.user_id}}">
-                                <button>Unblock</button>
+                                <button class="button-30">Unblock</button>
                               </a>
                                   
                               {% endif %}
