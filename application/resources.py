@@ -53,7 +53,7 @@ service_request_fields = {
 
 class ServiceListAPI(Resource):
     @marshal_with(service_fields)
-    # @auth_required('token')
+    @auth_required('token')
     def get(self):
         services = Service.query.all()
         return services
@@ -105,7 +105,7 @@ class ServiceRequestAPI(Resource):
 
 
 class UserServiceRequestAPI(Resource):
-    # @auth_required('token')
+    @auth_required('token')
     @marshal_with(service_request_fields)
     def get(self, user_id):
         service_requests = ServiceRequest.query.filter_by(customer_id=user_id).all()
@@ -113,7 +113,7 @@ class UserServiceRequestAPI(Resource):
         return service_requests + prof_requests
 
 
-api.add_resource(ServiceRequestAPI, '/services_requests')
+api.add_resource(ServiceRequestAPI, '/service_requests')
 api.add_resource(CustomerListAPI, '/customers')
 api.add_resource(ProfessionalListAPI, '/professionals')
 api.add_resource(ServiceListAPI, '/services')

@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask_security import auth_required, login_required, verify_password, hash_password, roles_required, current_user, login_user
 from datetime import datetime
 from .models import Customer, db, Professional, Service, ServiceRequest, User
+from sqlalchemy import or_
 
 datastore = app.security.datastore
 
@@ -194,9 +195,8 @@ def req_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
     srch_prof = "%"+srch_word.title()+"%"
-    r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word)).all()
-    r_prof_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.professional_name.like(srch_prof)).all()
-    search_results = r_service_name + r_prof_name
+    r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word) | ServiceRequest.professional_name.like(srch_prof)).all()
+    search_results = r_service_name 
     return render_template('search_req.html', service_request=search_results, user_id=id)
 
 @app.route('/search_service/<id>')
@@ -214,10 +214,11 @@ def service_search(id):
 @login_required
 def prof_search():
     srch_word = request.args.get('result')
-    srch_word = "%"+srch_word.title()+"%"
+    # srch_word = "%"+srch_word.title()+"%"
     srch_prof = "%"+srch_word.title()+"%"
-    r_prof_name = Professional.query.filter(Professional.fullname.like(srch_prof)).all()
-    search_results = r_prof_name
+    search_results = db.session.query(Professional).join(User).filter(
+        or_(User.email.like(srch_prof),Professional.fullname.like(srch_prof))
+        ).all()
     return render_template('search_professionals.html', professionals=search_results)
 
 @app.route('/search_customer')
@@ -276,29 +277,10 @@ def user_action(id):
 def service_remarks(request_id):
     req= ServiceRequest.query.get(request_id)
     if request.method == 'POST':
-        # rating_value = request.form.get('rating')
-        # remarks = request.form.get('remarks')
-        
-        # # Assuming you have `Professional` and `ServiceRequest` models
-        # professional_id = request.form.get('professional_id')  # ID passed as hidden input
-        
-        # # Save the rating and remarks in the Rating model
-        # rating = Rating(rating=float(rating_value), professional_id=professional_id)
-        # db.session.add(rating)
-        
-        # # Update average rating for professional
-        # professional = Professional.query.get(professional_id)
-        # ratings = [r.rating for r in professional.ratings]
-        # professional.average_rating = sum(ratings) / len(ratings) if ratings else rating_value
-        # db.session.commit()
-
-
         req.status = "closed"
         req.date_of_completion = datetime.now()
         db.session.commit()
-        return redirect(url_for('customer', id=req.customer_id))  # Redirect to home or any other page
-
-    # Render the template with pre-filled data for GET request
+        return redirect(url_for('customer', id=req.customer_id))  
     
     return render_template('service_remarks.html', service_req= req)
 
@@ -334,33 +316,27 @@ def profile(id):
 @app.route("/summary/<int:user_id>")
 @login_required
 def graph(user_id):
-    # Query the database for the given customer_id
     data = (
         db.session.query(ServiceRequest.status, db.func.count(ServiceRequest.id))
         .filter((ServiceRequest.customer_id == user_id) | (ServiceRequest.professional_id == user_id))  # Filter for either customer or professional
         .group_by(ServiceRequest.status)
         .all()
     )
-    
-    # Prepare data for the chart
-    labels = [row[0] for row in data]  # Statuses (e.g., "requested", "completed")
-    values = [row[1] for row in data]  # Count of requests for each status
+    labels = [row[0] for row in data]  # Statuses 
+    values = [row[1] for row in data]  # Count of req for each status...
 
     return render_template("summary.html", labels=labels, values=values)
 
 
 @app.route("/summary")
-@login_required
+@roles_required("admin")
 def summery():
-    # Query the database for the given customer_id
     data = (
         db.session.query(ServiceRequest.status, db.func.count(ServiceRequest.id))  
         .group_by(ServiceRequest.status)
         .all()
     )
-    
-    # Prepare data for the chart
-    labels = [row[0] for row in data]  # Statuses (e.g., "requested", "completed")
-    values = [row[1] for row in data]  # Count of requests for each status
+    labels = [row[0] for row in data] 
+    values = [row[1] for row in data]  
 
     return render_template("summary.html", labels=labels, values=values)
