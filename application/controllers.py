@@ -194,8 +194,13 @@ def req_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
     srch_prof = "%"+srch_word.title()+"%"
-    r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word) | ServiceRequest.professional_name.like(srch_prof)).all()
-    search_results = r_service_name 
+    search_results = db.session.query(ServiceRequest).join(User, User.id == ServiceRequest.professional_id).filter(
+    ServiceRequest.customer_id == id,
+    (ServiceRequest.service_name.like(srch_word) | User.email.like(srch_word))
+).all()
+
+    # r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word) | ServiceRequest.professional_name.like(srch_prof)).all()
+    # search_results = r_service_name 
     return render_template('search_req.html', service_request=search_results, user_id=id)
 
 @app.route('/search_service/<id>')
