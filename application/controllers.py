@@ -15,7 +15,7 @@ def entry():
 @app.route('/logout')
 def logout():
      return redirect(url_for('login'))
-#     return render_template('ServiceRequest.html')
+
 
 
 @app.route('/userlogin', methods=['GET','POST'])
@@ -24,14 +24,13 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         user = datastore.find_user(email = email)
-        # this_user = User.query.filter_by(email = email).first() # or .all()
+        
         if user:
             if verify_password(password, user.password):
                 login_user(user)
                 if user.roles[0].name == "admin":
                     return redirect('/admin')
                 elif user.roles[0].name == "professional":
-                    # this_user = Professional.query.filter_by(email = email).first()
                     return redirect(f'/professional/{user.id}')
                 else:
                     return redirect(f'/user/{user.id}') 
@@ -56,7 +55,7 @@ def customer_reg():
             return "user already exists with this email!"
         else:
             user = datastore.create_user(email=email, password=hash_password(pwd))
-            datastore.add_role_to_user(user, 'customer')  # Add role separately
+            datastore.add_role_to_user(user, 'customer')  # Adding role separately
             db.session.commit()
             new_user = Customer( user_id=user.id, address=address, pincode=pincode, fullname= fullname)
             db.session.add(new_user)
@@ -81,7 +80,7 @@ def professional_reg():
             return "user already exists with this email!"
         else:
             user = datastore.create_user(email=email, password=hash_password(pwd), active= False)
-            datastore.add_role_to_user(user, 'professional')  # Add role separately
+            datastore.add_role_to_user(user, 'professional')  
             db.session.commit()
             new_user = Professional( user_id=user.id, address=address, pincode=pincode, fullname= fullname, service_id=service)
             db.session.add(new_user)
@@ -182,12 +181,12 @@ def service_request(user_id, professional_id):
     return redirect(url_for('customer', id=user_id))
 
 
-def raw(text): # text = ServiceRequest One
-    split_list = text.split() #----> list ['ServiceRequest', 'One']
-    src_word = ''
-    for word in split_list:
-        src_word += word.lower()
-    return src_word
+# def raw(text): # text = ServiceRequest One
+#     split_list = text.split() #----> list ['ServiceRequest', 'One']
+#     src_word = ''
+#     for word in split_list:
+#         src_word += word.lower()
+#     return src_word
 
 @app.route('/search_req/<id>')
 @login_required
@@ -227,8 +226,8 @@ def cus_search():
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
     srch_cus = "%"+srch_word.title()+"%"
-    r_cus_name = Customer.query.filter(Customer.fullname.like(srch_cus)).all()
-    search_results = r_cus_name
+    search_results = db.session.query(Customer).join(User).filter(Customer.fullname.like(srch_cus)|
+        User.email.like(srch_cus)).all()
     return render_template('all_customers.html', customers=search_results)
 
 @app.route('/all_customers')

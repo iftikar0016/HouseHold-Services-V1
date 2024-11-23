@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Dashboard</title>
-    <link rel="stylesheet" href="/static/common.css">
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rowdies:wght@300;400;700&family=Solway:wght@300;400;500;700;800&display=swap');
+    </style>
+    <link rel="stylesheet" href="/static/common.css">
 </head>
 <body>
 
@@ -21,72 +24,87 @@
                     <li class="nav-item"><a class="nav-link" href="/admin">Home</a></li>
                     <!-- <li class="nav-item"><a class="nav-link" href="/search">Search</a></li> -->
                     <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
-                    <!-- <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li> -->
-                    <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+    
                 </ul>
             </div>
             
             <div class="nav-link" style="display: flex;">
-                <a href="/logout"> <button class="button-4">logout</button></a>
+                <a href="/logout"> <button class="button-4">Logout</button></a>
             </div>
         </div>
     </nav>
 
     <!-- Professionals Tab -->
-    <div>
-        <h3 style="margin:  15px;">Manage Professionals</h3>
-        <!-- search box -->
-          <form action="/search_professional" style="padding-bottom: 5px; display: flex; justify-content: center;">
+    <div class="container-fluid">
+      <h3 style="padding-top: 20px;">Manage Professionals</h3>
+      <!-- search box -->
+      <div class="search-container">
+        <form action="/search_professional">
             <div class="input-group">
-              <input 
-                  name="result" 
-                  type="text" 
-                  class="form-control" 
-                  placeholder="Search Professional" 
-                  aria-label="Search for Professionals" 
-                  aria-describedby="button-addon2" 
-              />
-              <button 
-                  class="btn" 
-                  type="submit" 
-                  id="button-addon2">
-                  Search
-              </button>
-          </div>
-          </form>
+                <input 
+                    name="result" 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Search Professional" 
+                    aria-label="Search for Professionals" 
+                    aria-describedby="button-addon2" 
+                />
+                <button 
+                    class="btn" 
+                    type="submit" 
+                    id="button-addon2">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
 
-        <!-- Add table or functionality to manage professionals here -->
-        <div class="tableMain" >
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Service ID</th>
-                    <th scope="col">Pin Code</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                {% for prof in professionals %} 
-                  <tr>
-                    <th scope="row">{{loop.index}}</th>
-                    <td>{{prof.fullname}}</td>
-                    <td>{{prof.service_id}}</td>
 
-                    <td> {{prof.pincode}}</td>
-                    
+      <div class="tableMain" >
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Service ID</th>
+                  <th scope="col">Pin Code</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider">
+              {% for prof in professionals %} 
+                <tr>
+                  <th scope="row">{{loop.index}}</th>
+                  <td>{{prof.fullname}}</td>
+                  <td>{{prof.service_id}}</td>
 
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-         </div>
+                  <td> {{prof.pincode}}</td>
+                  <td>
+                    {% if not prof.user.active %}
+                    <a href="user_action/{{prof.user_id}}">
+                      <button class="btn btn-warning">Review</button>
+                    </a>
+                        
+                    {% elif not prof.user.is_blocked %}
+                    <a href="user_action/{{prof.user_id}}">
+                      <button class="btn btn-danger">Block</button>
+                    </a>
+                        
+                    {% else %}
+                    <a href="user_action/{{prof.user_id}}">
+                      <button class="btn btn-info">Unblock</button>
+                    </a>
+                        
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+       </div>
             
      </div>
 
-
-    <!-- Bootstrap 5 JavaScript Bundle (Includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
