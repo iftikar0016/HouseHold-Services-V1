@@ -124,6 +124,27 @@
         <label for="pincode" class="form-label">Pincode</label>
         <input type="pincode" class="form-control" id="pincode" name="pincode" placeholder="{{user.customer.pincode}}">
       </div>
+      <div class="mb-3">
+        <label for="pincode" class="form-label">Full Name</label>
+        <input type="pincode" class="form-control" id="fullname" name="fullname" placeholder="{{user.customer.fullname}}">
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="address" class="form-control" id="address" name="address" placeholder="{{user.customer.address}}">
+      </div>
+      {% else %}
+      <div class="mb-3">
+        <label for="pincode" class="form-label">Pincode</label>
+        <input type="pincode" class="form-control" id="pincode" name="pincode" placeholder="{{user.professional.pincode}}">
+      </div>
+      <div class="mb-3">
+        <label for="pincode" class="form-label">Full Name</label>
+        <input type="pincode" class="form-control" id="fullname" name="fullname" placeholder="{{user.professional.fullname}}">
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="address" class="form-control" id="address" name="address" placeholder="{{user.professional.address}}">
+      </div>
       {% endif %}
       <button type="submit" class="btn">Save Changes</button>
     </form>

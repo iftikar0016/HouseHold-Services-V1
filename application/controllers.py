@@ -291,7 +291,9 @@ def profile(id):
     if request.method=="POST":
         email= request.form.get('email')
         password = request.form.get('password')
-        
+        fullname = request.form.get('fullname')
+        address = request.form.get('address')
+
         if email !='':
             user.email= email
         if password != '':
@@ -301,6 +303,11 @@ def profile(id):
             pincode = request.form.get('pincode')
             if pincode != '':
                 user.professional.pincode= pincode
+            if fullname != '':
+                user.professional.fullname = fullname
+            if address != '':
+                user.professional.address = address
+
             db.session.commit()
             return redirect(f'/professional/{user.id}')
 
@@ -308,6 +315,10 @@ def profile(id):
             pincode = request.form.get('pincode')
             if pincode != '':
                 user.customer.pincode= pincode
+            if fullname != '':
+                user.customer.fullname = fullname
+            if address != '':
+                user.customer.address = address
             db.session.commit()
             return redirect(f'/user/{user.id}') 
 
