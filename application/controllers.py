@@ -151,6 +151,13 @@ def editService(id):
 
     return render_template('EditService.html',service=service)
 
+@app.route('/delete_service/<int:id>')
+def delete_service(id):
+    service=Service.query.filter_by(id=id).first()
+    db.session.delete(service)
+    db.session.commit()
+    return redirect('/admin')
+
 @app.route('/service/<int:id>/<int:user_id>', methods=['GET','POST'])
 @login_required
 def service(id, user_id):
