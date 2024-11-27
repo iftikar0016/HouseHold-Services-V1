@@ -182,26 +182,16 @@ def service_request(user_id, professional_id):
     return redirect(url_for('customer', id=user_id))
 
 
-# def raw(text): # text = ServiceRequest One
-#     split_list = text.split() #----> list ['ServiceRequest', 'One']
-#     src_word = ''
-#     for word in split_list:
-#         src_word += word.lower()
-#     return src_word
-
 @app.route('/search_req/<id>')
 @login_required
 def req_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
-    srch_prof = "%"+srch_word.title()+"%"
     search_results = db.session.query(ServiceRequest).join(User, User.id == ServiceRequest.professional_id).filter(
     ServiceRequest.customer_id == id,
-    (ServiceRequest.service_name.like(srch_word) | User.email.like(srch_word))
+    (ServiceRequest.service_name.like(srch_word) | User.email.like(srch_word) | ServiceRequest.professional_name.like(srch_word) | ServiceRequest.professional_id.like(srch_word))
 ).all()
 
-    # r_service_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.service_name.like(srch_word) | ServiceRequest.professional_name.like(srch_prof)).all()
-    # search_results = r_service_name 
     return render_template('search_req.html', service_request=search_results, user_id=id)
 
 @app.route('/search_service/<id>')
@@ -209,9 +199,8 @@ def req_search(id):
 def service_search(id):
     srch_word = request.args.get('result')
     srch_word = "%"+srch_word.title()+"%"
-    # srch_prof = "%"+srch_word.title()+"%"
+
     r_service_name = Service.query.filter(Service.name.like(srch_word)).all()
-    # r_prof_name = ServiceRequest.query.filter(ServiceRequest.customer_id==id,ServiceRequest.professional_name.like(srch_prof)).all()
     search_results = r_service_name 
     return render_template('search_service.html', services=search_results, user_id=id)
 
@@ -219,10 +208,9 @@ def service_search(id):
 @login_required
 def prof_search():
     srch_word = request.args.get('result')
-    # srch_word = "%"+srch_word.title()+"%"
     srch_prof = "%"+srch_word.title()+"%"
     search_results = db.session.query(Professional).join(User).filter(
-        or_(User.email.like(srch_prof),Professional.fullname.like(srch_prof))
+        or_(User.email.like(srch_prof),Professional.fullname.like(srch_prof),Professional.pincode.like(srch_prof), Professional.user_id.like(srch_prof), Professional.service_id.like(srch_prof))
         ).all()
     return render_template('search_professionals.html', professionals=search_results)
 
@@ -230,9 +218,8 @@ def prof_search():
 @login_required
 def cus_search():
     srch_word = request.args.get('result')
-    srch_word = "%"+srch_word.title()+"%"
     srch_cus = "%"+srch_word.title()+"%"
-    search_results = db.session.query(Customer).join(User).filter(Customer.fullname.like(srch_cus)|
+    search_results = db.session.query(Customer).join(User).filter(Customer.pincode.like(srch_cus)|Customer.user_id.like(srch_cus)|Customer.fullname.like(srch_cus)|
         User.email.like(srch_cus)).all()
     return render_template('all_customers.html', customers=search_results)
 
@@ -273,6 +260,11 @@ def user_action(id):
         return redirect(url_for('admin'))
     if param == 'Unblock':
         user.is_blocked = False
+        db.session.commit()
+    if param == 'Reject':
+        prof=Professional.query.filter_by(user_id=id).first()
+        db.session.delete(prof)
+        db.session.delete(user)
         db.session.commit()
         return redirect(url_for('admin'))
     return render_template('user_action.html', user=user)

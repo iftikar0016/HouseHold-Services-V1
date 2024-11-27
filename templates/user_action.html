@@ -83,14 +83,23 @@
         
           <div> 
             {% if not user.active %}
-            <form action="/user_action/{{user.id}}">
+            <div>
               <div>
                 <h4>Name: {{user.professional.fullname}}</h4>
                 <h4>Email: {{user.email}}</h4>
               </div>
-                <input type="hidden" name="param" value="Approve">
-                <button type="submit" class="button-50" style="font-size: large;">Approve</button>
-            </form>
+              <div style="display: flex; justify-content: space-around;">
+                <form action="/user_action/{{user.id}}">
+                  <input type="hidden" name="param" value="Approve">
+                  <button type="submit" class="button-29" style="font-size: large; background-color: rgb(0, 255, 255);">Approve</button>
+                </form>
+                <form action="/user_action/{{user.id}}">
+                  <input type="hidden" name="param" value="Reject">
+                  <button type="submit" class="button-30" style="font-size: large; ">Reject</button>
+                </form>
+              </div>
+                
+            </div>
             {% elif not user.is_blocked %}
             <h2>Block Professional?</h2>
             <form action="/user_action/{{user.id}}" style="display: grid; ">
