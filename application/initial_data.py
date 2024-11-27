@@ -39,7 +39,7 @@ with app.app_context():
         db.session.commit()
         
         # Create and add professional profile
-        professional1 = Professional(user_id=user.id,fullname="professional1", service_id=first_service.id)
+        professional1 = Professional(user_id=user.id,fullname="professional1", service_id=first_service.id, experience=1)
         db.session.add(professional1)
         db.session.commit()
     # db.session.commit()

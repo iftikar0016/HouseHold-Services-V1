@@ -55,6 +55,7 @@ class Professional(db.Model):
     pincode=db.Column(db.Integer)
     phone_no=db.Column(db.Integer)
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
+    experience=db.Column(db.Integer)
     
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)

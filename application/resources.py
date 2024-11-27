@@ -22,6 +22,7 @@ professional_fields = {
     'pincode': fields.Integer,
     'phone_no': fields.Integer,
     'service_id': fields.Integer,
+    'experience': fields.Integer,
 }
 
 

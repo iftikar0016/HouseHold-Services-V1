@@ -39,19 +39,20 @@
     {% else %}
     <h1 style="padding: 20px;">Best {{service.name}} professionals in your location</h1>
     <h3 style="padding-top: 5px; padding-left: 20px;">
+        <div style="display: flex;"> 
         {% for prof in professionals %}
-        
-        <div class="card" style="width: 13rem;">
-            <img src="https://imgs.search.brave.com/0jjDdElNJ3_cbtITXmwh__8IfbLWY2JPa6-w2sEL6tA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by91/c2VyLWZyb250LXNp/ZGUtd2l0aC13aGl0/ZS1iYWNrZ3JvdW5k/XzE4NzI5OS00MDAw/Ny5qcGc_c2VtdD1h/aXNfaHlicmlk" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h4 class="card-title">{{prof.fullname}}</h4>
-              <h6 class="card-text">Service ID: {{prof.service_id}}</h6>
-              <h6 class="card-text">Pincode: {{prof.pincode}}</h6>
-              <h6 class="card-text">Address: {{prof.address}}</h6>
-              <a href="/service_request/{{user.user_id}}/{{prof.user_id}}" class="btn btn-primary">Book</a>
+            <div class="card" style="width: 13rem; margin: 10px;">
+                <img src="https://imgs.search.brave.com/0jjDdElNJ3_cbtITXmwh__8IfbLWY2JPa6-w2sEL6tA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by91/c2VyLWZyb250LXNp/ZGUtd2l0aC13aGl0/ZS1iYWNrZ3JvdW5k/XzE4NzI5OS00MDAw/Ny5qcGc_c2VtdD1h/aXNfaHlicmlk" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h4 class="card-title">{{prof.fullname}}</h4>
+                <h6 class="card-text">Service ID: {{prof.service_id}}</h6>
+                <h6 class="card-text">Pincode: {{prof.pincode}}</h6>
+                <h6 class="card-text">Experience(yrs): {{prof.experience}}</h6>
+                <a href="/service_request/{{user.user_id}}/{{prof.user_id}}" class="btn btn-primary">Book</a>
+                </div>
             </div>
-        </div>
         {% endfor %}
+        </div>
     </h3>
     {% endif %}
     <!-- Bootstrap 5 JavaScript Bundle (Includes Popper) -->

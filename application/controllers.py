@@ -75,6 +75,7 @@ def professional_reg():
         pincode=request.form.get("pincode")
         fullname=request.form.get("fullname")
         service=request.form.get("service")
+        experience=request.form.get("experience")
         user = datastore.find_user(email = email)
         if user:
             return "user already exists with this email!"
@@ -82,7 +83,7 @@ def professional_reg():
             user = datastore.create_user(email=email, password=hash_password(pwd), active= False)
             datastore.add_role_to_user(user, 'professional')  
             db.session.commit()
-            new_user = Professional( user_id=user.id, address=address, pincode=pincode, fullname= fullname, service_id=service)
+            new_user = Professional( user_id=user.id, experience=experience, address=address, pincode=pincode, fullname= fullname, service_id=service)
             db.session.add(new_user)
             db.session.commit()
             return redirect('/userlogin')
@@ -97,7 +98,7 @@ def admin():
     professionals = Professional.query.all()
     services = Service.query.all()
     service_request= ServiceRequest.query.all()
-    return render_template('a_dash.html', professionals= professionals, services= services, service_request=service_request)
+    return render_template('admin_dashboard.html', professionals= professionals, services= services, service_request=service_request)
 
 @app.route('/user/<int:id>', methods=['GET','POST'])
 @roles_required("customer")
@@ -105,7 +106,7 @@ def customer(id):
    user=Customer.query.filter_by(user_id=id).first()
    services=Service.query.all()
    service_request=ServiceRequest.query.filter_by(customer_id=id)
-   return render_template('c_dash.html',user=user, services=services, service_request=service_request)
+   return render_template('customer_dashboard.html',user=user, services=services, service_request=service_request)
 
 
 @app.route('/professional/<int:id>', methods=['GET','POST'])
@@ -116,7 +117,7 @@ def professional(id):
     if user.user.is_blocked or not user.user.active:
         return abort(403)
     service_request=ServiceRequest.query.filter_by(professional_id=id)
-    return render_template('p_dash.html',user=user, services=services, service_request=service_request)
+    return render_template('professional_dashboard.html',user=user, services=services, service_request=service_request)
 
 
 @app.route('/add_service', methods=['GET','POST'])
