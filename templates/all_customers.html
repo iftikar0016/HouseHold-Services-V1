@@ -81,17 +81,17 @@
                             <td>
                               {% if not cus.user.active %}
                               <a href="user_action/{{cus.user_id}}">
-                                <button>Review</button>
+                                <button class="button-29">Review</button>
                               </a>
                                   
                               {% elif not cus.user.is_blocked %}
                               <a href="user_action/{{cus.user_id}}">
-                                <button class="btn btn-danger">Block</button>
+                                <button class="button-30" style="font-weight: bold ;color: rgb(255, 254, 254); background-color: rgb(255, 38, 0);">Block</button>
                               </a>
                                   
                               {% else %}
                               <a href="user_action/{{cus.user_id}}">
-                                <button class="button-30">Unblock</button>
+                                <button class="button-30" style="font-weight: bold ;color: rgb(0, 0, 0); background-color: rgb(251, 247, 28);">Unblock</button>
                               </a>
                                   
                               {% endif %}

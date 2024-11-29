@@ -16,13 +16,13 @@ with app.app_context():
 
     # First admin user
     if not userdatastore.find_user(email='admin@email'):
-        user = userdatastore.create_user(email='admin@email', password=hash_password('pass'))
+        user = userdatastore.create_user(email='admin@email', password=hash_password('1111'))
         userdatastore.add_role_to_user(user, admin_role)  # Added role separately
         db.session.commit()
 
     # First customer user
     if not userdatastore.find_user(email='customer1@email'):
-        user = userdatastore.create_user(email='customer1@email', password=hash_password('pass'))
+        user = userdatastore.create_user(email='customer1@email', password=hash_password('1111'))
         userdatastore.add_role_to_user(user, customer_role)  
         db.session.commit()
         
@@ -33,7 +33,7 @@ with app.app_context():
 
     # First professional user
     if not userdatastore.find_user(email='professional1@email'):
-        user = userdatastore.create_user(email='professional1@email', password=hash_password('pass'))
+        user = userdatastore.create_user(email='professional1@email', password=hash_password('1111'))
         userdatastore.add_role_to_user(user, professional_role)
         db.session.add(first_service)  
         db.session.commit()
