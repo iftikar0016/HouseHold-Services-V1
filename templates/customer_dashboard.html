@@ -72,7 +72,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Service ID</th>
                     <th>Service Name</th>
                     <th>Professional Name</th>
                     <th>Date of Request.</th>
@@ -93,9 +93,9 @@
                         {% elif service.status == 'rejected' %}
                         Rejected
                         {% elif service.status == 'requested' %}
-                         Requested    
+                        <a href="/close_service/{{ service.id }}"><button class="button-30" style="color: black; background-color: aliceblue;">Cancel Request?</button></a>    
                         {% else %}
-                        <a href="/service_remarks/{{ service.id }}" class="btn btn-sm btn-success">Close it?</a>
+                        <a href="/service_remarks/{{ service.id }}"><button class="button-29">Close Request?</button></a>
                         {% endif %}
                     </td>
                 </tr>

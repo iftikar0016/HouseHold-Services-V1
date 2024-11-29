@@ -159,11 +159,19 @@ def delete_service(id):
     db.session.commit()
     return redirect('/admin')
 
+@app.route('/close_service/<int:id>')
+def close_service(id):
+    service=ServiceRequest.query.filter_by(id=id).first()
+    db.session.delete(service)
+    db.session.commit()
+    return redirect(url_for('customer', id=service.customer_id))  
+
 @app.route('/service/<int:id>/<int:user_id>', methods=['GET','POST'])
 @login_required
 def service(id, user_id):
     service=Service.query.filter_by(id=id).first()
-    professionals=Professional.query.filter_by(service_id=id).all()
+    user=Customer.query.filter_by(user_id=user_id).first()
+    professionals=Professional.query.filter_by(service_id=id,pincode=user.pincode ).all()
     user=Customer.query.filter_by(user_id=user_id).first()
     return render_template('service.html', service=service, professionals=professionals, user=user)
 
@@ -189,7 +197,7 @@ def req_search(id):
     srch_word = "%"+srch_word.title()+"%"
     search_results = db.session.query(ServiceRequest).join(User, User.id == ServiceRequest.professional_id).filter(
     ServiceRequest.customer_id == id,
-    (ServiceRequest.service_name.like(srch_word) | User.email.like(srch_word) | ServiceRequest.professional_name.like(srch_word) | ServiceRequest.professional_id.like(srch_word))
+    (ServiceRequest.status.like(srch_word) | ServiceRequest.service_name.like(srch_word) | User.email.like(srch_word) | ServiceRequest.professional_name.like(srch_word) | ServiceRequest.professional_id.like(srch_word))
 ).all()
 
     return render_template('search_req.html', service_request=search_results, user_id=id)
@@ -261,6 +269,7 @@ def user_action(id):
     if param == 'Unblock':
         user.is_blocked = False
         db.session.commit()
+        return redirect(url_for('admin'))
     if param == 'Reject':
         prof=Professional.query.filter_by(user_id=id).first()
         db.session.delete(prof)
@@ -274,7 +283,9 @@ def user_action(id):
 def service_remarks(request_id):
     req= ServiceRequest.query.get(request_id)
     if request.method == 'POST':
+        remarks=request.form.get('description')
         req.status = "closed"
+        req.remarks = remarks
         req.date_of_completion = datetime.now()
         db.session.commit()
         return redirect(url_for('customer', id=req.customer_id))  
